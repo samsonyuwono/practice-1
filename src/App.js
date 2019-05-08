@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import Album from "./Album";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      albums: [],
+      loading: false
+    };
+  }
+
+  componentDidMount() {
+    fetch("http://jsonplaceholder.typicode.com/albums")
+      .then(res => res.json())
+      .then(json =>
+        this.setState({
+          albums: json,
+          loading: true
+        })
+      );
+  }
+  render() {
+    const { albums, loading } = this.state;
+    console.log(this.state);
+    return !loading ? (
+      <h1>Loading....</h1>
+    ) : (
+      <div className="App">
+        {albums.map(album => {
+          return <Album album={album} />;
+        })}
+      </div>
+    );
+  }
 }
-
 export default App;
